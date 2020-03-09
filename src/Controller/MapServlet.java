@@ -1,12 +1,9 @@
 package Controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import model.TouristPlace;
-import service.ListOperations;
+import service.MapOperations;
 
 
 @WebServlet(urlPatterns= {"/map"})
@@ -24,7 +21,8 @@ public class MapServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 //Create appropriate objects for the map
-	
+	Map<String,TouristPlace> bucketList =new HashMap<String,TouristPlace>();
+	MapOperations mo = new MapOperations();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
@@ -39,48 +37,52 @@ public class MapServlet extends HttpServlet {
 		String reset = request.getParameter("reset");
 		
 		// create object for Toursist class and call the appropriate method
-		
+		TouristPlace tp =new TouristPlace(name,destination,rank);
 		if(add!=null) {
 			// call the add method and store the return value in a map variable
-			
-			request.setAttribute("bucketList", /*return variable */);
+			List<TouristPlace> map = mo.add(tp);
+			request.setAttribute("bucketList", map/*return variable */);
 			request.setAttribute("message", "user added successfully");
 			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/list.jsp");
 			rd.forward(request, response);
 		}
 
 		if(remove!=null) {
+			Object map = mo.remove(tp);
 			// call the remove method and store the return value in a map variable
-			request.setAttribute("bucketList", /*return variable */);
+			request.setAttribute("bucketList", map/*return variable */);
 			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/list.jsp");
 			rd.forward(request, response);
 		}
 
 		
 		if(sortRandom!=null) {
+			Object map = mo.sortRandomly(bucketList);
 			// call the sortRandomly method and store the return value in a map variable
-			request.setAttribute("bucketList",/*return variable */);
+			request.setAttribute("bucketList",map/*return variable */);
 			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/list.jsp");
 			rd.forward(request, response);
 		}
 
 		if(sortInEntryOrder!=null) {
+			Object map = mo.sortInEntryOrder(bucketList);
 			// call the sortInEntryOrder and store the return value in a map variable
-			request.setAttribute("bucketList", /*return variable */);
+			request.setAttribute("bucketList", map/*return variable */);
 			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/list.jsp");
 			rd.forward(request, response);
 		}
 		if(sortAlphabetically!=null) {
-			
+			Object map = mo.sortAlphabetically(bucketList);
 			// call the sort Alphabetically and store the return value in a map variable
-			request.setAttribute("bucketList",/*return variable */);
+			request.setAttribute("bucketList",map/*return variable */);
 			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/list.jsp");
 			rd.forward(request, response);
 		}
 
 		if(reset!=null) {	
+			Object map = mo.reset(bucketList);
 			// call the reset method and store the return value in a map variable
-			request.setAttribute("bucketList", /*return variable */);
+			request.setAttribute("bucketList", map/*return variable */);
 			RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/WEB-INF/views/list.jsp");
 			rd.forward(request, response);
 		}
